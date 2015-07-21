@@ -64,11 +64,17 @@ function test(response) {
 		alphanumeric_results.push(jsfile.isAlphanumeric(alphanumeric_cases[i]));
 	};
 
-	var b = jsfile.isAlphanumeric('/*');
-	console.log(b);
+	var endspace_cases = ['\n', '\r', '\f', ' ', ';', '', '-'];
+	var endspace_results = [];
+	for (var i = 0; i < endspace_cases.length; i++) {
+		endspace_results.push(jsfile.isEndspace(endspace_cases[i]));
+	};
 
-	var c = jsfile.isEndspace('\n');
-	console.log(c);
+	var whitespace_cases = [' ', '\t', '\n', '\r', '\f', 'a', '1'];
+	var whitespace_results = [];
+	for (var i = 0; i < whitespace_cases.length; i++) {
+		whitespace_results.push(jsfile.isWhitespace(whitespace_cases[i]));
+	};
 
 	var body = '<html>'+
 		'<head>'+
@@ -76,8 +82,9 @@ function test(response) {
 		'charset=UTF-8" />'+
 		'</head>'+
 		'<body>'+
-		'<p>test: isAlphanumeric: cases=' + alphanumeric_cases + ', results=' + alphanumeric_results + '</p>'+
-		'<p>test: isEndspace: c=' + c + '</p>'+
+		'<p>test: isAlphanumeric: cases = ' + alphanumeric_cases + ', results = ' + alphanumeric_results + '</p>'+
+		'<p>test: isEndspace: cases = ' + endspace_cases + ', results = ' + endspace_results + '</p>'+
+		'<p>test: isWhitespace: cases = ' + whitespace_cases + ', results = ' + whitespace_results + '</p>'+
 		'</body>'+
 		'</html>';
 	
