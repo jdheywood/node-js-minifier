@@ -58,10 +58,11 @@ function show(response) {
 
 function test(response) {
 
-
-
-	var a = jsfile.isAlphanumeric('abc123');
-	console.log(a);
+	var alphanumeric_cases = ['abc123', '/*~#-', '123', 'abc'];
+	var alphanumeric_results = [];
+	for (var i = 0; i < alphanumeric_cases.length; i++) {
+		alphanumeric_results.push(jsfile.isAlphanumeric(alphanumeric_cases[i]));
+	};
 
 	var b = jsfile.isAlphanumeric('/*');
 	console.log(b);
@@ -75,7 +76,7 @@ function test(response) {
 		'charset=UTF-8" />'+
 		'</head>'+
 		'<body>'+
-		'<p>test: isAlphanumeric: a=' + a + ', b=' + b + '</p>'+
+		'<p>test: isAlphanumeric: cases=' + alphanumeric_cases + ', results=' + alphanumeric_results + '</p>'+
 		'<p>test: isEndspace: c=' + c + '</p>'+
 		'</body>'+
 		'</html>';
