@@ -1,0 +1,48 @@
+JS minifier notes
+
+Perhaps need to update my version of node to take advantage of ES6 classes?
+
+Create a class (use ES6 feature of javascript)
+
+JsFile(
+	input, string
+	length, int
+	currentPosition, int
+	lastPosition, int
+	char1, char
+	char2, char
+	char3, char
+	char4, char
+	output, string
+	result, string
+
+	read(), function
+	skip(numberOfChars int), function
+	write(), function
+
+	minify(), function
+)
+
+properties:
+
+input is the string of the js file coming in
+length is the number of characters in the input js
+currentPosition is the current position in the input js string
+lastPosition is the position in the input js string we were at before attempting the current step in the minification, for back-tracking purposes should this be required
+char1 is the character at the current position
+char2 is the character at the current position + 1
+char3 is the character at the current position + 2
+char4 is the character at the current position + 3
+output is the minified version of the input js
+result is a string message detailing what happened, either 'success!' or 'fail: <reason>'
+
+methods:
+
+read() sets the char1, char2, char3 and char4 properties based off the position property
+skip(numberOfChars int) skips a number of characters and sets the position property accordingly
+write() writes the char at the current position
+minify() the entry point, starts at first position and writes a minified version of the input property character by character to the output property
+
+
+
+
