@@ -76,6 +76,19 @@ function test(response) {
 		whitespace_results.push(jsfile.isWhitespace(whitespace_cases[i]));
 	};
 
+
+	var getChar_case = 'hello world';
+	var getChar_result = '';
+	for (var i = 0; i < getChar_case.length; i++) {
+		getChar_result = getChar_result + jsfile.getChar(getChar_case, i);
+	}
+
+	var putChar_result = '';
+	for (var i = 0; i < getChar_case.length; i++) {
+		putChar_result = jsfile.putChar(putChar_result, jsfile.getChar(getChar_case, i));
+	}
+
+
 	var body = '<html>'+
 		'<head>'+
 		'<meta http-equiv="Content-Type" content="text/html; '+
@@ -85,6 +98,10 @@ function test(response) {
 		'<p>test: isAlphanumeric: cases = ' + alphanumeric_cases + ', results = ' + alphanumeric_results + '</p>'+
 		'<p>test: isEndspace: cases = ' + endspace_cases + ', results = ' + endspace_results + '</p>'+
 		'<p>test: isWhitespace: cases = ' + whitespace_cases + ', results = ' + whitespace_results + '</p>'+
+
+		'<p>test: getChar: case = ' + getChar_case + ', result = ' + getChar_result + '</p>'+
+		'<p>test: getChar: case = ' + getChar_case + ', putChar: result = ' + putChar_result + '</p>'+
+
 		'</body>'+
 		'</html>';
 	

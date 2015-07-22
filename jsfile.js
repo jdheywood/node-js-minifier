@@ -37,11 +37,21 @@ function isPostfix(input) {
 	return (!!input.match(expr) || isInfix(input));
 }
 
+function getChar(input, position) {
+	return input.charAt(position);
+}
+
+function putChar(output, char) {
+	return output.concat(char);
+}
+
 exports.foo = foo;
 exports.readFile = readFile;
 exports.isAlphanumeric = isAlphanumeric;
-exports.isWhitespace = isWhitespace;
 exports.isEndspace = isEndspace;
+exports.isWhitespace = isWhitespace;
 exports.isInfix = isInfix;
 exports.isPrefix = isPrefix;
 exports.isPostfix = isPostfix;
+exports.getChar = getChar;
+exports.putChar = putChar;
