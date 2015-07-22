@@ -32,20 +32,20 @@ function upload(response, request) {
 		console.log("parsing done");
 		
 		/* Possible error on Windows systems: tried to rename to an already existing file */
-		fs.rename(files.upload.path, "/Dev/Node/tmp/out.js", function(error) {
+		fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js", function(error) {
 			if (error) {
-				fs.unlink("/Dev/Node/tmp/out.js");
-				fs.rename(files.upload.path, "/Dev/Node/tmp/out.js");
+				fs.unlink("/Dev/node-js-minifier/tmp/out.js");
+				fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js");
 			}
 		});
 	
 		/* So here is where we need to minify our incoming javascript */
 		jsfile.foo();
-		var jsinput = jsfile.readFile("/Dev/Node/tmp/out.js");
+		var jsinput = jsfile.readFile("/Dev/node-js-minifier/tmp/out.js");
 		//console.log(jsinput);
 
 		response.writeHead(200, {"content-type": "text/javascript"});
-		var readStream = fs.createReadStream('/Dev/Node/tmp/out.js');
+		var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out.js');
     	readStream.pipe(response);
 	});
 }
@@ -53,7 +53,7 @@ function upload(response, request) {
 function show(response) {
 	console.log("Request handler 'show' was called.");
 	response.writeHead(200, {'content-type': 'text/javascript'});
-	fs.createReadStream('/Dev/Node/tmp/out.js').pipe(response);
+	fs.createReadStream('/Dev/node-js-minifier/tmp/out.js').pipe(response);
 }
 
 function test(response) {
@@ -76,6 +76,23 @@ function test(response) {
 		whitespace_results.push(jsfile.isWhitespace(whitespace_cases[i]));
 	};
 
+	var infix_cases = ['a','1','+','-','/', ',', ';', ':', '=', '&', '%', '*', '<', '>', '\?', '\|', '\n'];
+	var infix_results = [];
+	for (var i = 0; i < infix_cases.length; i++) {
+		infix_results.push(jsfile.isInfix(infix_cases[i]));
+	};
+
+	var prefix_cases = ['a','1','+', '\{', '\(', '\[', '!'];
+	var prefix_results = [];
+	for (var i = 0; i < prefix_cases.length; i++) {
+		prefix_results.push(jsfile.isPrefix(prefix_cases[i]));
+	};	
+
+	var postfix_cases = ['a','1','+', '\}', '\)', '\]'];
+	var postfix_results = [];
+	for (var i = 0; i < postfix_cases.length; i++) {
+		postfix_results.push(jsfile.isPostfix(postfix_cases[i]));
+	};
 
 	var getChar_case = 'hello world';
 	var getChar_result = '';
@@ -88,6 +105,13 @@ function test(response) {
 		putChar_result = jsfile.putChar(putChar_result, jsfile.getChar(getChar_case, i));
 	}
 
+	jsfile.minify('/Dev/node-js-minifier/tmp/out.js');
+	console.log(myCharA);
+	console.log(myCharB);
+	console.log(myCharC);
+	console.log(myCharD);
+	console.log(jsfile.getChar(myInput, 5));
+
 
 	var body = '<html>'+
 		'<head>'+
@@ -98,6 +122,9 @@ function test(response) {
 		'<p>test: isAlphanumeric: cases = ' + alphanumeric_cases + ', results = ' + alphanumeric_results + '</p>'+
 		'<p>test: isEndspace: cases = ' + endspace_cases + ', results = ' + endspace_results + '</p>'+
 		'<p>test: isWhitespace: cases = ' + whitespace_cases + ', results = ' + whitespace_results + '</p>'+
+		'<p>test: isInfix: cases = ' + infix_cases + ', results = ' + infix_results + '</p>'+
+		'<p>test: isPrefix: cases = ' + prefix_cases + ', results = ' + prefix_results + '</p>'+
+		'<p>test: isPostfix: cases = ' + postfix_cases + ', results = ' + postfix_results + '</p>'+
 
 		'<p>test: getChar: case = ' + getChar_case + ', result = ' + getChar_result + '</p>'+
 		'<p>test: getChar: case = ' + getChar_case + ', putChar: result = ' + putChar_result + '</p>'+
