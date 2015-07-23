@@ -12,10 +12,6 @@ myLastReadChar = '';
 myOutput = '';
 myPosition = 0;
 
-function foo() {
-	console.log("bar");
-}
-
 function readFile(filename) {
 	var file = fs.readFileSync(filename, "utf8");
 	return file;
@@ -66,8 +62,6 @@ function getChar() {
 function putChar(char) {
 	myOutput = myOutput.concat(char);
 }
-
-/* ---------------------------------------------- */
 
 // print a
 // move b to a
@@ -133,8 +127,8 @@ function putLiteral() {
 	}
 }
 
-// If $s->{a} is a whitespace then collapse all following whitespace.
-// If any of the whitespace is a new line then ensure $s->{a} is a new line
+// If a is a whitespace then collapse all following whitespace.
+// If any of the whitespace is a new line then ensure a is a new line
 // when this function ends.
 function collapseWhitespace() {
 	while (defined(myCharA) && isWhitespace(myCharA) && 
@@ -146,7 +140,7 @@ function collapseWhitespace() {
 	}
 }
 
-// Advance $s->{a} to non-whitespace or end of file.
+// Advance a to non-whitespace or end of file.
 // Doesn't print any of this whitespace.
 function skipWhitespace() {
   while (defined(myCharA) && isWhitespace(myCharA)) {
@@ -154,7 +148,7 @@ function skipWhitespace() {
   }
 }
 
-// Advance $s->{a} to non-whitespace or end of file
+// Advance a to non-whitespace or end of file
 // If any of the whitespace is a new line then print one new line.
 function preserveEndspace() {
   collapseWhitespace();
@@ -171,57 +165,8 @@ function onWhitespaceConditionalComment() {
           defined(myCharD) && myCharD == '@');
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ------------------------------------------------------------------------------------------
 
-// Lets do this!
 function minify(filename, stripDebug) {
 	// read the file
 	myInput = readFile(filename);
@@ -247,7 +192,7 @@ function minify(filename, stripDebug) {
 				throw 'minifier bug: minify loop starting with whitespace, barfed!';
 			}
 
-			// Each branch handles trailing whitespace and ensures $s->{a} is on non-whitespace or undef when branch finishes
+			// Each branch handles trailing whitespace and ensures a is on non-whitespace or is undefined when branch finishes
 			if (myCharA == '/') { // a division, comment, or regexp literal
 		      	if (defined(myCharB) && myCharB == '/') { // slash-slash comment
 		        	ccFlag = defined(myCharC) && myCharC == '@'; // tests in IE7 show no space allowed between slashes and at symbol
@@ -360,23 +305,6 @@ function minify(filename, stripDebug) {
   	return myOutput;
 } // fin
 
-
-
-function loopTest() {
-
-	var limit = 100;
-	var count = 0;
-
-	while (count < limit) {
-		console.log(count++);
-	}
-}
-
-
-
-/* ---------------------------------------------- */
-
-exports.foo = foo;
 exports.readFile = readFile;
 exports.isAlphanumeric = isAlphanumeric;
 exports.isEndspace = isEndspace;
@@ -386,5 +314,5 @@ exports.isPrefix = isPrefix;
 exports.isPostfix = isPostfix;
 exports.getChar = getChar;
 exports.putChar = putChar;
+exports.defined = defined;
 exports.minify = minify;
-exports.loopTest = loopTest;

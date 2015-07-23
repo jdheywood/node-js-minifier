@@ -25,17 +25,12 @@ function start(response) {
 }
 
 function upload(response, request) {
-	var outputPath = "/Dev/node-js-minifier/tmp/";
-	// TODO - upload file as original name
-
 	console.log("Request handler 'upload' was called.");
 	
 	var form = new formidable.IncomingForm();
 	form.parse(request, function(error, fields, files) {
 		console.log("parsing done");
 	
-		console.log(files.upload.name);
-
 		/* Possible error on Windows systems: tried to rename to an already existing file */
 		fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js", function(error) {
 			if (error) {
@@ -45,10 +40,7 @@ function upload(response, request) {
 		});
 	
 		/* So here is where we need to minify our incoming javascript */
-		var jsinput = jsfile.readFile("/Dev/node-js-minifier/tmp/out.js");
 		var result = jsfile.minify('/Dev/node-js-minifier/tmp/out.js', true);
-
-		// TODO write minified version as filename .min.js instead of out-min.js
 		fs.writeFile('/Dev/node-js-minifier/tmp/out-min.js', result, function(err) {
 		    if(err) {
 		        return console.log(err);
@@ -66,7 +58,7 @@ function upload(response, request) {
 function show(response) {
 	console.log("Request handler 'show' was called.");
 	response.writeHead(200, {'content-type': 'text/javascript'});
-	fs.createReadStream('/Dev/node-js-minifier/tmp/out.js').pipe(response);
+	fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js').pipe(response);
 }
 
 function test(response) {
@@ -110,16 +102,23 @@ function test(response) {
 	var getChar_case = 'hello world';
 	var getChar_result = '';
 	for (var i = 0; i < getChar_case.length; i++) {
-		getChar_result = getChar_result + jsfile.getChar(getChar_case, i);
+		getChar_result = getChar_result + jsfile.getChar();
 	}
 
+	myOutput = '';
 	var putChar_result = '';
 	for (var i = 0; i < getChar_case.length; i++) {
-		putChar_result = jsfile.putChar(putChar_result, jsfile.getChar(getChar_case, i));
+		jsfile.putChar(jsfile.getChar());
 	}
 
-	var result = jsfile.minify('/Dev/node-js-minifier/tmp/out.js', false);
-	console.log('-----------------------------------');
+	var defined_cases = [ '', ' ', '0', false, undefined ];
+	var defined_results = [];
+	for (var i = 0; i < defined_cases.length; i++) {
+		defined_results.push(jsfile.defined(defined_cases[i]));
+	}
+
+	myOutput = '';
+	var result = jsfile.minify('/Dev/node-js-minifier/jquery-1.11.3.js', false);
 	console.log(result);
 
 	var body = '<html>'+
@@ -134,10 +133,9 @@ function test(response) {
 		'<p>test: isInfix: cases = ' + infix_cases + ', results = ' + infix_results + '</p>'+
 		'<p>test: isPrefix: cases = ' + prefix_cases + ', results = ' + prefix_results + '</p>'+
 		'<p>test: isPostfix: cases = ' + postfix_cases + ', results = ' + postfix_results + '</p>'+
-
 		'<p>test: getChar: case = ' + getChar_case + ', result = ' + getChar_result + '</p>'+
-		'<p>test: getChar: case = ' + getChar_case + ', putChar: result = ' + putChar_result + '</p>'+
-
+		'<p>test: getChar: case = ' + getChar_case + ', putChar: result = ' + myOutput + '</p>'+
+		'<p>test: defined: cases = ' + defined_cases + ', results = ' + defined_results + '</p>'+
 		'</body>'+
 		'</html>';
 	
