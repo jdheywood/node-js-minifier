@@ -25,12 +25,17 @@ function start(response) {
 }
 
 function upload(response, request) {
+	var outputPath = "/Dev/node-js-minifier/tmp/";
+	// TODO - upload file as original name
+
 	console.log("Request handler 'upload' was called.");
 	
 	var form = new formidable.IncomingForm();
 	form.parse(request, function(error, fields, files) {
 		console.log("parsing done");
-		
+	
+		console.log(files.upload.name);
+
 		/* Possible error on Windows systems: tried to rename to an already existing file */
 		fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js", function(error) {
 			if (error) {
@@ -40,12 +45,20 @@ function upload(response, request) {
 		});
 	
 		/* So here is where we need to minify our incoming javascript */
-		jsfile.foo();
 		var jsinput = jsfile.readFile("/Dev/node-js-minifier/tmp/out.js");
-		//console.log(jsinput);
+		var result = jsfile.minify('/Dev/node-js-minifier/tmp/out.js', true);
 
+		// TODO write minified version as filename .min.js instead of out-min.js
+		fs.writeFile('/Dev/node-js-minifier/tmp/out-min.js', result, function(err) {
+		    if(err) {
+		        return console.log(err);
+		    }
+		    console.log("The file was saved!");
+		}); 
+
+		/* and write it back as the response of the upload */
 		response.writeHead(200, {"content-type": "text/javascript"});
-		var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out.js');
+		var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js');
     	readStream.pipe(response);
 	});
 }
@@ -105,13 +118,9 @@ function test(response) {
 		putChar_result = jsfile.putChar(putChar_result, jsfile.getChar(getChar_case, i));
 	}
 
-	jsfile.minify('/Dev/node-js-minifier/tmp/out.js');
-	console.log(myCharA);
-	console.log(myCharB);
-	console.log(myCharC);
-	console.log(myCharD);
-	console.log(jsfile.getChar(myInput, 5));
-
+	var result = jsfile.minify('/Dev/node-js-minifier/tmp/out.js', false);
+	console.log('-----------------------------------');
+	console.log(result);
 
 	var body = '<html>'+
 		'<head>'+
