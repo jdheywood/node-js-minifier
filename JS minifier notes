@@ -43,6 +43,77 @@ skip(numberOfChars int) skips a number of characters and sets the position prope
 write() writes the char at the current position
 minify() the entry point, starts at first position and writes a minified version of the input property character by character to the output property
 
+------------------------------------------------------------------------------
+
+
+So I've set myself another challenge, this time the goal is to gain a bit more experience and understanding of perl syntax, so what better way to do that than to try and translate some perl into a language I already know something about, that way I have to research perl syntax and find its counterparts in a language I already understand.
+
+As perl is a dynamic interpreted language it seems only fair to give myself a fighting chance and use something similar, thinking about dynamic interpreted languages that I have had exposure to, of those the one I'm most familiar with is good old javascript, so let's use that.
+
+Next we need something to translate, let's not go overboard here with complexity, although at the same time I need something a little more challenging than hello world, and if it was something of real utility it would help to make the results something useful, after a bit of digging around I found this perl module; https://github.com/zoffixznet/JavaScript-Minifier a javascript minifier written in perl. This kind of completes a nice circle in that if I'm successful I'll have a javascript minifier of javascript, which is nice!
+
+Taking the goal of this exercise a little further, it would be nice to be to use some ofthe new shiny EC6 features of javascript too, to push this on beyond simple vanilla JS, so we'll have a go at that too.
+
+So how best to approach the problem, after a brief review of the perl module I gave myself a little vertigo, perhaps this was too much of an ask, but that's just the fear talking, and as Paul Muad'Dib once said, fear is the mind killer, (yes I recently re-read Dune, still great 10+ years after my first trip to Arrakis) so park that shit, take a step back and break theproblem down into smaller more manageable pieces, as I see it there are four main steps to cracking this;
+
+1. Identify and set up some means of running my javascript minifier
+2. Translate the perl to vanilla javascript // starting with the helper/support functions
+3. Test my translation as I go // research the perl syntax
+4. Pick a reasonable piece of javascript to test this on
+5. Compare my results with those of the perl modules
+6. Once happy start re-writing with ES6 features
+
+
+Running my Javascript
+
+So a few steps to take care of there, starting at the beginning how do I run my as yet non-existent javascript? There are a few ways to do this, I could use an online tool like http://jsfiddle.net or one of the many similar tools a quick google throws up like http://jsbin.com or http://codepen.io/ but they don't really offer the kind of full hands on experience I ws after. On reflection I decided to write a little node application that I could submit a javascript file to, that way I could write my minifier within node and have a framework in place to manually and possibly automatically test the use of my minifier against actual javascript files.
+
+Luckily I already had a basic node application that allows you to upload and display image files, that'll do nicely for my purposes. I wrote this ages ago following a basic node tutorial (if you've searched for a node tutorial online you have possibly stumbled over this), you can find it here; http://www.nodebeginner.org/ well the first part is online, I bought the book a while ago, its a great introduction to node so well worth it in my humble opinion.
+
+So adapting my basic node application to upload a javascript file and minify this then save the minified file and respond with the minified script in the body seems like a nice fit for purpose. Also it gives me some time playing around with node which is enjoyable.
+
+A brief overview of the node application is probably a good idea then, so this is a couple of features more than the most basic node server you can write, MVP and all that, it consists of the following files; 
+
+index.js
+router.js
+server.js
+requestHandler.js
+
+
+Translating Perl to Vanilla JS
+
+That's the first of my steps taken care of then (with a bit of code development), how do I start translating perl a language I don;t know to javascript? Well it turns out I do know some perl, or at least I know enough of similar dynamically typed and interpreted languages, such as Javascript and a little Python and Ruby. Also most high level languages share some commonality, especially with the great grandaddy C so once you know how to code you stand a good chance of learning a new programming language.
+
+Armed with a little knowledge then let's have a read through of the perl module, using the (very) basic pseudo code below we can describe the flow of the perl minify module; 
+
+
+>>> pseudo code goes here
+
+
+So now we have a basic understanding of the flow how do we start translating this code? I decided to start with the various helper functions that the perl module contains, the main routine uses several helper functions to help either identify the expression that the current part of the input represents or to help chop up the input and remove stuff we don't need like comments and whitespace etc.
+
+So let's add a new file for my minifier then, we'll call this minifier.js to keep things nice and simple, and starting with the supporting perl functions we'll add javascript functions for the following; 
+
+readFile
+isAlphanumeric
+isEndspace
+isWhitespace
+isInfix
+isPrefix
+isPostfix
+getChar
+putChar
+defined
+minify
+
+Starting at the top and working my way down gave me exposure to perl syntax, armed with my trusty Google-Fu skilles I started piecing together these helper functions, but once I understand what these should do how can I ensure what I am writing is fit for purpose? 
+
+We need some tests, given that I have enough new tech on my hands at the moment I decided to shy away from implementing a javascript testing framework such as jasmine, instead as I have a nice litte server I decided to add a new request handler for /test and use this to test these helper functions by setting up test cases, calling the helper functions and writing out the results to the response body, try it out and you'll see how far I got with these tests.
+
+
+
+
+
 
 
 
