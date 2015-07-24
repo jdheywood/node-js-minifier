@@ -2,8 +2,6 @@ module.exports = function(grunt) {
 
   require("load-grunt-tasks")(grunt); // npm install --save-dev load-grunt-tasks
 
-  "use strict";
-
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-browserify');
 

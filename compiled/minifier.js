@@ -3,16 +3,16 @@
 var fs = require('fs');
 
 // Globals, find a better way todo this asap!
-Globals.myInput = '';
-Globals.myCharA = '';
-Globals.myCharB = '';
-Globals.myCharC = '';
-Globals.myCharD = '';
-Globals.myLast = '';
-Globals.myLastNws = '';
-Globals.myLastReadChar = '';
-Globals.myOutput = '';
-Globals.myPosition = 0;
+var myInput = '';
+var myCharA = '';
+var myCharB = '';
+var myCharC = '';
+var myCharD = '';
+var myLast = '';
+var myLastNws = '';
+var myLastReadChar = '';
+var myOutput = '';
+var myPosition = 0;
 
 function readFile(filename) {
 	var file = fs.readFileSync(filename, "utf8");
@@ -295,6 +295,10 @@ function minify(filename, stripDebug) {
 	return myOutput;
 } // fin
 
+function output() {
+	return myOutput;
+}
+
 exports.readFile = readFile;
 exports.isAlphanumeric = isAlphanumeric;
 exports.isEndspace = isEndspace;
@@ -306,4 +310,5 @@ exports.getChar = getChar;
 exports.putChar = putChar;
 exports.defined = defined;
 exports.minify = minify;
+exports.output = output;
 //# sourceMappingURL=minifier.js.map

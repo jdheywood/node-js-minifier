@@ -105,7 +105,6 @@ function test(response) {
 		getChar_result = getChar_result + minifier.getChar();
 	}
 
-	myOutput = '';
 	var putChar_result = '';
 	for (var i = 0; i < getChar_case.length; i++) {
 		minifier.putChar(minifier.getChar());
@@ -117,9 +116,8 @@ function test(response) {
 		defined_results.push(minifier.defined(defined_cases[i]));
 	}
 
-	myOutput = '';
-	var result = minifier.minify('/Dev/node-js-minifier/jquery-1.11.3.js', false);
-	console.log(result);
+	//var result = minifier.minify('/Dev/node-js-minifier/jquery-1.11.3.js', false);
+	//console.log(result);
 
 	var body = '<html>'+
 		'<head>'+
@@ -134,7 +132,7 @@ function test(response) {
 		'<p>test: isPrefix: cases = ' + prefix_cases + ', results = ' + prefix_results + '</p>'+
 		'<p>test: isPostfix: cases = ' + postfix_cases + ', results = ' + postfix_results + '</p>'+
 		'<p>test: getChar: case = ' + getChar_case + ', result = ' + getChar_result + '</p>'+
-		'<p>test: getChar: case = ' + getChar_case + ', putChar: result = ' + myOutput + '</p>'+
+		'<p>test: putChar: case = ' + getChar_case + ', putChar: result = ' + minifier.output + '</p>'+
 		'<p>test: defined: cases = ' + defined_cases + ', results = ' + defined_results + '</p>'+
 		'</body>'+
 		'</html>';

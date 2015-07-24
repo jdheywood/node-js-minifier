@@ -1,16 +1,87 @@
 var fs = require('fs');
 
 // Globals, find a better way todo this asap!
-var myInput = '';
-var myCharA = '';
-var myCharB = '';
-var myCharC = '';
-var myCharD = '';
-var myLast = '';
-var myLastNws = '';
-var myLastReadChar = '';
-var myOutput = '';
-var myPosition = 0;
+/*
+myInput = '';
+myCharA = '';
+myCharB = '';
+myCharC = '';
+myCharD = '';
+myLast = '';
+myLastNws = '';
+myLastReadChar = '';
+myOutput = '';
+myPosition = 0;
+*/
+
+function isWhitespace(input) {
+	var expr = /\s/
+	return expr.test(input);
+}
+
+class State {
+	constructor(filename) {
+  		this.jsInput = fs.readFileSync(filename, "utf8");
+  		this.charA = '';
+		this.charB = '';
+		this.charC = '';
+		this.charD = '';
+		this.last = '';
+		this.lastNws = '';
+		this.lastReadChar = '';
+		this.output = '';
+		this.position = 0;
+  	}
+  	setCharA(input) {
+		this.charA = input;
+  	}
+  	setCharB(input) {
+		this.charB = input;
+  	}
+  	setCharC(input) {
+		this.charC = input;
+  	}
+  	setCharD(input) {
+		this.charD = input;
+  	}
+  	getChar() {
+		if (this.position < this.jsInput.length) {
+			this.lastReadChar = this.jsInput.charAt(this.position++);
+			return this.lastReadChar;
+		}
+		else {
+			return undefined;
+		}
+  	}
+	putChar(c) {
+		this.output = this.output.concat(c);
+	}
+	// print a and advance
+	action1() {
+  		if (!isWhitespace(this.charA)) {
+    		this.lastNws = this.charA;
+  		}
+  		this.last = this.charA;
+  		this.action2();
+	}
+	// sneeky output a for comments
+	action2() {
+  		this.putChar(this.charA);
+  		this.action3();
+	}
+	// delete a
+	action3() {
+  		this.charA = this.charB;
+  		this.action4();
+	}
+	// delete b
+	action4() {
+  		this.charB = this.charC;
+  		this.charC = this.charD;
+  		this.charD = this.getChar();
+	}
+}
+
 
 function readFile(filename) {
 	var file = fs.readFileSync(filename, "utf8");
@@ -24,11 +95,6 @@ function isAlphanumeric(input) {
 
 function isEndspace(input) {
 	return (input == '\n' || input == '\r' || input == '\f')
-}
-
-function isWhitespace(input) {
-	var expr = /\s/
-	return expr.test(input);
 }
 
 /* New line characters before or after these characters can be removed.
@@ -50,6 +116,7 @@ function isPostfix(input) {
 	return (expr.test(input) || isInfix(input));
 }
 
+/*
 function getChar() {
 	if (myPosition < myInput.length) {
 		myLastReadChar = myInput.charAt(myPosition++);
@@ -59,11 +126,15 @@ function getChar() {
 		return undefined;
 	}
 }
+*/
 
+/*
 function putChar(char) {
 	myOutput = myOutput.concat(char);
 }
+*/
 
+/*
 // print a
 // move b to a
 // move c to b
@@ -106,6 +177,7 @@ function action4() {
   myCharC = myCharD;
   myCharD = getChar();
 }
+*/
 
 function defined(thing) {
 	return (typeof thing !== 'undefined');
@@ -305,10 +377,6 @@ function minify(filename, stripDebug) {
   	return myOutput;
 } // fin
 
-function output() {
-	return myOutput;
-}
-
 exports.readFile = readFile;
 exports.isAlphanumeric = isAlphanumeric;
 exports.isEndspace = isEndspace;
@@ -320,4 +388,3 @@ exports.getChar = getChar;
 exports.putChar = putChar;
 exports.defined = defined;
 exports.minify = minify;
-exports.output = output;
