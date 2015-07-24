@@ -12,6 +12,35 @@ myLastReadChar = '';
 myOutput = '';
 myPosition = 0;
 
+/*
+class Minificator {
+  constructor(filename) {
+  	this.input = fs.readFileSync(filename, "utf8");
+  	this.charA = '';
+	this.charB = '';
+	this.charC = '';
+	this.charD = '';
+	this.last = '';
+	this.lastNws = '';
+	this.lastReadChar = '';
+	this.output = '';
+	this.position = 0;
+  }
+  setCharA(input) {
+	this.charA = input;
+  }
+  setCharB(input) {
+	this.charB = input;
+  }
+  setCharC(input) {
+	this.charC = input;
+  }
+  setCharD(input) {
+	this.charD = input;
+  }
+}
+*/
+
 function readFile(filename) {
 	var file = fs.readFileSync(filename, "utf8");
 	return file;

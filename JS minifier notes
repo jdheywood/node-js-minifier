@@ -162,11 +162,32 @@ Given I want to look at using some of the new ES6 javascript syntax I figured my
 
 Once happy start re-writing with ES6 features
 
+So what features does ES6 provide that we might want to use, a quick bit of Google-Fu provides us a few likely candidates;
+
+ES6 features
+
+
+
+So how do we do this, well we we can easily write some of our code in this way however if we want to run it through node we'll need to transpile it down to ES5 syntax for it to execute.
+
+This sounds like a job for some automation, let's introduce a task runner. The one I've used in the past is grunt http://gruntjs.com/, surely there's a grunt tool for transpiling ES6, let's have a look, yep of course there is, I'm rolling with babel https://babeljs.io/ you can see the package.json and Gruntfile.js I set up to run the compilation/transpilation.
+
+So the dev process now is;
+- write my ES6 flavoured JS
+- run grunt
+- execute the compiled/index.js with node
+- enjoy!
+
+This seems a little odd, write code in one format but execute in another, but its no different to using coffeescript or typescript, in fact its similar to writing code in a compiled language like C#, although admittedly the output of our compilation here is still code that needs interpreting rather than a binary exectable or package.
+
+So anyway once you have transpiled navigate to the compiled version and fire it up, all being well it should behave itself and work as it did before, et voila we have a JS minifier written using some ES6 javascript, very nice indeed.
 
 
 
 
+Summary
 
+So to round off this very long winded post, here are my final thoughts;
 
 
 What I Like
@@ -174,30 +195,27 @@ What I Like
 The fact that my JS minifier actually minifies javascript, using javascript!
 The use of node as a development framework
 That I've learnt a bit about perl, setting up a VM, installing modules, syntax, the $_ default variable (or topic)
+Grunt and babel
 
 What I Don't like
 
 That it's not quite an exact match due to some small bug I've yet to track down
 That online JS lint tools are super strict and a bit of a pain when just trying to validate your javascript
+That use strict kills global variables, although I shouldn't have been using them anyway
 
 
 What I'd do if I had more time
 
-Implement proper testing using Jasmine
+Implement proper testing using Jasmine http://jasmine.github.io/2.0/introduction.html
 Debug the perl to see the control flow rather than just picturing this in my head
 Add some defensive coding, catch thrown exceptions for example
 Add some basic styling to the node app pages
+Introduce more ES6 features
 
 
+I've learnt quite a few things during this exercise, and it's been a fun little challenge which I've mostly achieved, as with all first passes there is plenty of room for improvement but that just gives me a reason to revisit this project and learn some more.
 
 
-Summary
-
-So in summary I've learnt quite a few things and achieved the following
-
-
-
-
-That's all for now folks, until next time
+Ok that's all for now folks, until next time, stay classy
 
 
