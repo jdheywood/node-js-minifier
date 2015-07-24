@@ -57,8 +57,8 @@ Taking the goal of this exercise a little further, it would be nice to be to use
 So how best to approach the problem, after a brief review of the perl module I gave myself a little vertigo, perhaps this was too much of an ask, but that's just the fear talking, and as Paul Muad'Dib once said, fear is the mind killer, (yes I recently re-read Dune, still great 10+ years after my first trip to Arrakis) so park that shit, take a step back and break theproblem down into smaller more manageable pieces, as I see it there are four main steps to cracking this;
 
 1. Identify and set up some means of running my javascript minifier
-2. Translate the perl to vanilla javascript // starting with the helper/support functions
-3. Test my translation as I go // research the perl syntax
+2. Translate the perl to vanilla javascript 
+3. Test the translation as I build it 
 4. Pick a reasonable piece of javascript to test this on
 5. Compare my results with those of the perl modules
 6. Once happy start re-writing with ES6 features
@@ -106,14 +106,98 @@ putChar
 defined
 minify
 
-Starting at the top and working my way down gave me exposure to perl syntax, armed with my trusty Google-Fu skilles I started piecing together these helper functions, but once I understand what these should do how can I ensure what I am writing is fit for purpose? 
+Starting at the top and working my way down gave me exposure to perl syntax, armed with my trusty Google-Fu skills I started piecing together these helper functions, but once I understand what these should do how can I ensure what I am writing is fit for purpose? 
+
+
+
+Test the translation as I build it
 
 We need some tests, given that I have enough new tech on my hands at the moment I decided to shy away from implementing a javascript testing framework such as jasmine, instead as I have a nice litte server I decided to add a new request handler for /test and use this to test these helper functions by setting up test cases, calling the helper functions and writing out the results to the response body, try it out and you'll see how far I got with these tests.
 
+Given a bit more time I would like to implement jasmine BDD testing, it looks like it has a nice node integration and seems fairly straight forward to set up; http://jasmine.github.io/2.0/introduction.html 
+
+So by reading through perl syntax online, and writing the helper functions in javascript I gained an understanding of how the minifier works, once the helper functions and a means for me to execute the minifier (via my node app) were in place the next step was to write the main function that actually does the minification.
+
+This took me the longest, especially as it is based on a while loop. There were a few head scratching moments when I entered into an infinite loop, but I got there in the end. 
+
+
+
+Pick a reasonable piece of javascript to test this on
+
+As I was writing the main minifier function I realised I needed something realistic to test this on, looking through some of my previous projects the first thing that jumped out at me was jQuery, why not, its a well know and proven piece of code, let's have a crack at that then.
+
+I downloaded the uncompressed development version of 1.11.3 from here; http://code.jquery.com/jquery-1.11.3.js 
+
+
+
+Compare my results with those of the perl module
+
+There's one easy way to check the veracity of the output from my translated minifier, which is obvious really, run the same javascript through the perl minifier and comapre the two outputs, so let's do that then!
+
+To do that we'll need to set up a perl envirnoment, luckily I have one at hand as described by this post [insert link] So after finding the package on CPAN (https://metacpan.org/pod/JavaScript::Minifier) I was able to install this on my perl VM (http://www.perlmonks.org/?node_id=128077) and run my jquery javascript file through it so I can compare it to my JS minified version.
+
+Initially there was a significant difference, which after a little debugging was due to an error I had made in transposing the boolean logic around /* comments. 
+
+In Perl there is a nice bit of loop syntax, the do {...} until (condition) loop. There is no direct equivalent in Javascript, but we can replicate this with a while (condition) {...} loop.
+
+The error I made was in my transposition of the boolean logic, changing 
+
+until (!defined($s->{b}) || ($s->{a} eq '*' && $s->{b} eq '/'))
+
+to 
+
+while (defined(myCharB) && !(myCharA == '*' && myCharB == '/'))
+
+Initially I had the following; 
+
+while (defined(myCharB) && (myCharA != '*' && myCharB != '/'))
+
+Which is not the same logic, and meant I had loads of left over comment content and end comment markers that had not been removed as they should be, so my javascript was in fact broken.
+
+Once I resolved this I got pretty close to the perl minified version, however I still have a few tabs or whitespaces left over which the perl version has removed. I decided to park the debugging of this as the overall difference between the perl and my JS minified scripts is only 2kb. 
+
+Given I want to look at using some of the new ES6 javascript syntax I figured my version is close enough for now for me to move on, and given enough time later I will redouble my efforts to get this last whitespace removed from my minified version.
+
+
+
+Once happy start re-writing with ES6 features
 
 
 
 
 
+
+
+
+What I Like
+
+The fact that my JS minifier actually minifies javascript, using javascript!
+The use of node as a development framework
+That I've learnt a bit about perl, setting up a VM, installing modules, syntax, the $_ default variable (or topic)
+
+What I Don't like
+
+That it's not quite an exact match due to some small bug I've yet to track down
+That online JS lint tools are super strict and a bit of a pain when just trying to validate your javascript
+
+
+What I'd do if I had more time
+
+Implement proper testing using Jasmine
+Debug the perl to see the control flow rather than just picturing this in my head
+Add some defensive coding, catch thrown exceptions for example
+Add some basic styling to the node app pages
+
+
+
+
+Summary
+
+So in summary I've learnt quite a few things and achieved the following
+
+
+
+
+That's all for now folks, until next time
 
 
