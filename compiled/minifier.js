@@ -20,8 +20,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var _fs = require("fs");
 
-// Globals, find a better way todo this asap!
-
 var fs = _interopRequireWildcard(_fs);
 
 var myInput = '';

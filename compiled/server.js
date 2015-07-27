@@ -1,6 +1,3 @@
-//var http = require("http");
-//var url = require("url");
-
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -40,6 +37,4 @@ function start(route, handle) {
 	http.createServer(onRequest).listen(8888);
 	console.log("Server has started.");
 }
-
-//exports.start = start;
 //# sourceMappingURL=server.js.map

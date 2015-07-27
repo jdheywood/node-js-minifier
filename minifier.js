@@ -1,6 +1,5 @@
 import * as fs from "fs";
 
-// Globals, find a better way todo this asap!
 var myInput = '';
 var myCharA = '';
 var myCharB = '';

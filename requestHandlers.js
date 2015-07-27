@@ -64,44 +64,44 @@ export function test(response) {
 
 	var alphanumeric_cases = ['abc123', '/*~#-', '123', 'abc'];
 	var alphanumeric_results = [];
-	for (var i = 0; i < alphanumeric_cases.length; i++) {
-		alphanumeric_results.push(isAlphanumeric(alphanumeric_cases[i]));
-	};
+	for (let x of alphanumeric_cases) {
+		alphanumeric_results.push(isAlphanumeric(x));
+	}
 
 	var endspace_cases = ['\n', '\r', '\f', ' ', ';', '', '-'];
 	var endspace_results = [];
-	for (var i = 0; i < endspace_cases.length; i++) {
-		endspace_results.push(isEndspace(endspace_cases[i]));
+	for (let x of endspace_cases) {
+		endspace_results.push(isEndspace(x));
 	};
 
 	var whitespace_cases = [' ', '\t', '\n', '\r', '\f', 'a', '1'];
 	var whitespace_results = [];
-	for (var i = 0; i < whitespace_cases.length; i++) {
-		whitespace_results.push(isWhitespace(whitespace_cases[i]));
+	for (let x of whitespace_cases) {
+		whitespace_results.push(isWhitespace(x));
 	};
 
 	var infix_cases = ['a','1','+','-','/', ',', ';', ':', '=', '&', '%', '*', '<', '>', '\?', '\|', '\n'];
 	var infix_results = [];
-	for (var i = 0; i < infix_cases.length; i++) {
-		infix_results.push(isInfix(infix_cases[i]));
+	for (let x of infix_cases) {
+		infix_results.push(isInfix(x));
 	};
 
 	var prefix_cases = ['a','1','+', '\{', '\(', '\[', '!'];
 	var prefix_results = [];
-	for (var i = 0; i < prefix_cases.length; i++) {
-		prefix_results.push(isPrefix(prefix_cases[i]));
+	for (let x of prefix_cases) {
+		prefix_results.push(isPrefix(x));
 	};	
 
 	var postfix_cases = ['a','1','+', '\}', '\)', '\]'];
 	var postfix_results = [];
-	for (var i = 0; i < postfix_cases.length; i++) {
-		postfix_results.push(isPostfix(postfix_cases[i]));
+	for (let x of postfix_cases) {
+		postfix_results.push(isPostfix(x));
 	};
 
 	var defined_cases = [ '', ' ', '0', false, undefined ];
 	var defined_results = [];
-	for (var i = 0; i < defined_cases.length; i++) {
-		defined_results.push(defined(defined_cases[i]));
+	for (let x of defined_cases) {
+		defined_results.push(defined(x));
 	}
 
 	var body = '<html>'+

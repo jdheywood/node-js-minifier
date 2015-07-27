@@ -17,6 +17,4 @@ function route(handle, pathname, response, request) {
 		response.end();
 	}
 }
-
-//exports.route = route;
 //# sourceMappingURL=router.js.map

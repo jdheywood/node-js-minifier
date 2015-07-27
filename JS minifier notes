@@ -182,7 +182,26 @@ import { minify } from "./minifier";
 That ./ indicate the current path and therefore node knows to look there and not try and resolve via npm installed packages.
 
 
-Template Strings
+Iterators
+
+The iterable and iterator syntax of ES6 is much cleaner than vanilla javascript, one example of this is the 'for of' loop construct, taking one of my test cases as an example we can see that in good old javascript we have the following; 
+
+var whitespace_cases = [' ', '\t', '\n', '\r', '\f', 'a', '1'];
+var whitespace_results = [];
+
+for (var i = 0; i < whitespace_cases.length; i++) {
+	whitespace_results.push(isWhitespace(whitespace_cases[i]));
+};
+
+So we set up an array of test cases, and an empty array of results, then we loop over the cases and push each result to the results array. The for loop is clasic JS syntax, with the need to reference the iterator value to pull out the entry at that position. Using the for of loop construct we get the following;
+
+for (let x of whitespace_cases) {
+	whitespace_results.push(isWhitespace(x));
+};
+
+As you can see this is much cleaner, just let me loop over each entry in my array, I don't care about its position in this use case I just want to do something to each variable and crack on. I really like this, as with modules it is long overdue in my opinion.
+
+
 
 
 
