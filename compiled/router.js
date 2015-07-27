@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.route = route;
+
 function route(handle, pathname, response, request) {
 	// TODO: skip requests for pathname == '/favicon.ico'
 	console.log("About to route a request for " + pathname);
@@ -13,5 +18,5 @@ function route(handle, pathname, response, request) {
 	}
 }
 
-exports.route = route;
+//exports.route = route;
 //# sourceMappingURL=router.js.map

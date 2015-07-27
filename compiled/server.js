@@ -1,7 +1,22 @@
+//var http = require("http");
+//var url = require("url");
+
 "use strict";
 
-var http = require("http");
-var url = require("url");
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.start = start;
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+
+var _http = require("http");
+
+var http = _interopRequireWildcard(_http);
+
+var _url = require("url");
+
+var url = _interopRequireWildcard(_url);
 
 function start(route, handle) {
 	function onRequest(request, response) {
@@ -26,5 +41,5 @@ function start(route, handle) {
 	console.log("Server has started.");
 }
 
-exports.start = start;
+//exports.start = start;
 //# sourceMappingURL=server.js.map

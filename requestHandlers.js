@@ -1,10 +1,8 @@
 import { minify, isAlphanumeric, isEndspace, isWhitespace, isInfix, isPrefix, isPostfix, getChar, putChar, defined, miniOutput } from "./minifier";
+import * as fs from "fs";
+import * as formidable from "formidable";
 
-var querystring = require("querystring"),
-	fs = require("fs"),
-	formidable = require("formidable");
-
-function start(response) {
+export function start(response) {
 	console.log("Request handler 'start' was called.");
 	
 	var body = '<html>'+
@@ -25,7 +23,7 @@ function start(response) {
 	response.end();
 }
 
-function upload(response, request) {
+export function upload(response, request) {
 	console.log("Request handler 'upload' was called.");
 	
 	var form = new formidable.IncomingForm();
@@ -56,13 +54,13 @@ function upload(response, request) {
 	});
 }
 
-function show(response) {
+export function show(response) {
 	console.log("Request handler 'show' was called.");
 	response.writeHead(200, {'content-type': 'text/javascript'});
 	fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js').pipe(response);
 }
 
-function test(response) {
+export function test(response) {
 
 	var alphanumeric_cases = ['abc123', '/*~#-', '123', 'abc'];
 	var alphanumeric_results = [];
@@ -126,8 +124,3 @@ function test(response) {
 	response.write(body);
 	response.end();
 }
-
-exports.start = start;
-exports.upload = upload;
-exports.show = show;
-exports.test = test;

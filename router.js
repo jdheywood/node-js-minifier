@@ -1,4 +1,4 @@
-function route(handle, pathname, response, request) {
+export function route(handle, pathname, response, request) {
 	// TODO: skip requests for pathname == '/favicon.ico'
 	console.log("About to route a request for " + pathname);
 	if (typeof handle[pathname] === 'function') {
@@ -10,5 +10,3 @@ function route(handle, pathname, response, request) {
 		response.end();
 	}
 }
-
-exports.route = route;

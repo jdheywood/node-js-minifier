@@ -1,12 +1,12 @@
-var server = require("./server");
-var router = require("./router");
-var requestHandlers = require("./requestHandlers");
+import { start } from "./server";
+import { route } from "./router";
+import * as handler from "./requestHandlers";
 
 var handle = {}
-handle["/"] = requestHandlers.start;
-handle["/start"] = requestHandlers.start;
-handle["/upload"] = requestHandlers.upload;
-handle["/show"] = requestHandlers.show;
-handle["/test"] = requestHandlers.test;
+handle["/"] = handler.start;
+handle["/start"] = handler.start;
+handle["/upload"] = handler.upload;
+handle["/show"] = handler.show;
+handle["/test"] = handler.test;
 
-server.start(router.route, handle);
+start(route, handle);
