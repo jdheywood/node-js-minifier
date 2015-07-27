@@ -91,27 +91,13 @@ function test(response) {
 		postfix_results.push((0, _minifier.isPostfix)(postfix_cases[i]));
 	};
 
-	var getChar_case = 'hello world';
-	var getChar_result = '';
-	for (var i = 0; i < getChar_case.length; i++) {
-		getChar_result = getChar_result + (0, _minifier.getChar)();
-	}
-
-	var putChar_result = '';
-	for (var i = 0; i < getChar_case.length; i++) {
-		(0, _minifier.putChar)((0, _minifier.getChar)());
-	}
-
 	var defined_cases = ['', ' ', '0', false, undefined];
 	var defined_results = [];
 	for (var i = 0; i < defined_cases.length; i++) {
 		defined_results.push((0, _minifier.defined)(defined_cases[i]));
 	}
 
-	//var result = minify('/Dev/node-js-minifier/jquery-1.11.3.js', false);
-	//console.log(result);
-
-	var body = '<html>' + '<head>' + '<meta http-equiv="Content-Type" content="text/html; ' + 'charset=UTF-8" />' + '</head>' + '<body>' + '<p>test: isAlphanumeric: cases = ' + alphanumeric_cases + ', results = ' + alphanumeric_results + '</p>' + '<p>test: isEndspace: cases = ' + endspace_cases + ', results = ' + endspace_results + '</p>' + '<p>test: isWhitespace: cases = ' + whitespace_cases + ', results = ' + whitespace_results + '</p>' + '<p>test: isInfix: cases = ' + infix_cases + ', results = ' + infix_results + '</p>' + '<p>test: isPrefix: cases = ' + prefix_cases + ', results = ' + prefix_results + '</p>' + '<p>test: isPostfix: cases = ' + postfix_cases + ', results = ' + postfix_results + '</p>' + '<p>test: getChar: case = ' + getChar_case + ', result = ' + getChar_result + '</p>' + '<p>test: putChar: case = ' + getChar_case + ', putChar: result = ' + ' TODO ' + '</p>' + '<p>test: defined: cases = ' + defined_cases + ', results = ' + defined_results + '</p>' + '</body>' + '</html>';
+	var body = '<html>' + '<head>' + '<meta http-equiv="Content-Type" content="text/html; ' + 'charset=UTF-8" />' + '</head>' + '<body>' + '<p>test: isAlphanumeric: cases = ' + alphanumeric_cases + ', results = ' + alphanumeric_results + '</p>' + '<p>test: isEndspace: cases = ' + endspace_cases + ', results = ' + endspace_results + '</p>' + '<p>test: isWhitespace: cases = ' + whitespace_cases + ', results = ' + whitespace_results + '</p>' + '<p>test: isInfix: cases = ' + infix_cases + ', results = ' + infix_results + '</p>' + '<p>test: isPrefix: cases = ' + prefix_cases + ', results = ' + prefix_results + '</p>' + '<p>test: isPostfix: cases = ' + postfix_cases + ', results = ' + postfix_results + '</p>' + '<p>test: defined: cases = ' + defined_cases + ', results = ' + defined_results + '</p>' + '</body>' + '</html>';
 
 	response.writeHead(200, { "Content-Type": "text/html" });
 	response.write(body);

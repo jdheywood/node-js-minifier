@@ -14,9 +14,16 @@ exports.getChar = getChar;
 exports.putChar = putChar;
 exports.defined = defined;
 exports.minify = minify;
-var fs = require('fs');
+exports.miniOutput = miniOutput;
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+var _fs = require("fs");
 
 // Globals, find a better way todo this asap!
+
+var fs = _interopRequireWildcard(_fs);
+
 var myInput = '';
 var myCharA = '';
 var myCharB = '';
@@ -314,23 +321,7 @@ function minify(filename, stripDebug) {
 
 // fin
 
-function output() {
+function miniOutput() {
 	return myOutput;
 }
-
-/*
-exports.readFile = readFile;
-exports.isAlphanumeric = isAlphanumeric;
-exports.isEndspace = isEndspace;
-exports.isWhitespace = isWhitespace;
-exports.isInfix = isInfix;
-exports.isPrefix = isPrefix;
-exports.isPostfix = isPostfix;
-exports.getChar = getChar;
-exports.putChar = putChar;
-exports.defined = defined;
-exports.minify = minify;
-exports.output = output;
-
-*/
 //# sourceMappingURL=minifier.js.map

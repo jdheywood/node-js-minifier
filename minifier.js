@@ -1,4 +1,4 @@
-var fs = require('fs');
+import * as fs from "fs";
 
 // Globals, find a better way todo this asap!
 var myInput = '';
@@ -305,23 +305,6 @@ export function minify(filename, stripDebug) {
   	return myOutput;
 } // fin
 
-function output() {
+export function miniOutput() {
 	return myOutput;
-	
 }
-
-/*
-exports.readFile = readFile;
-exports.isAlphanumeric = isAlphanumeric;
-exports.isEndspace = isEndspace;
-exports.isWhitespace = isWhitespace;
-exports.isInfix = isInfix;
-exports.isPrefix = isPrefix;
-exports.isPostfix = isPostfix;
-exports.getChar = getChar;
-exports.putChar = putChar;
-exports.defined = defined;
-exports.minify = minify;
-exports.output = output;
-
-*/

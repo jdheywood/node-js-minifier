@@ -1,4 +1,4 @@
-import { minify, isAlphanumeric, isEndspace, isWhitespace, isInfix, isPrefix, isPostfix, getChar, putChar, defined } from "./minifier";
+import { minify, isAlphanumeric, isEndspace, isWhitespace, isInfix, isPrefix, isPostfix, getChar, putChar, defined, miniOutput } from "./minifier";
 
 var querystring = require("querystring"),
 	fs = require("fs"),
@@ -100,25 +100,11 @@ function test(response) {
 		postfix_results.push(isPostfix(postfix_cases[i]));
 	};
 
-	var getChar_case = 'hello world';
-	var getChar_result = '';
-	for (var i = 0; i < getChar_case.length; i++) {
-		getChar_result = getChar_result + getChar();
-	}
-
-	var putChar_result = '';
-	for (var i = 0; i < getChar_case.length; i++) {
-		putChar(getChar());
-	}
-
 	var defined_cases = [ '', ' ', '0', false, undefined ];
 	var defined_results = [];
 	for (var i = 0; i < defined_cases.length; i++) {
 		defined_results.push(defined(defined_cases[i]));
 	}
-
-	//var result = minify('/Dev/node-js-minifier/jquery-1.11.3.js', false);
-	//console.log(result);
 
 	var body = '<html>'+
 		'<head>'+
@@ -132,8 +118,6 @@ function test(response) {
 		'<p>test: isInfix: cases = ' + infix_cases + ', results = ' + infix_results + '</p>'+
 		'<p>test: isPrefix: cases = ' + prefix_cases + ', results = ' + prefix_results + '</p>'+
 		'<p>test: isPostfix: cases = ' + postfix_cases + ', results = ' + postfix_results + '</p>'+
-		'<p>test: getChar: case = ' + getChar_case + ', result = ' + getChar_result + '</p>'+
-		'<p>test: putChar: case = ' + getChar_case + ', putChar: result = ' + ' TODO ' + '</p>'+
 		'<p>test: defined: cases = ' + defined_cases + ', results = ' + defined_results + '</p>'+
 		'</body>'+
 		'</html>';
