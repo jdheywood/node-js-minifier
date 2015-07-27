@@ -147,7 +147,24 @@ function putLiteral() {
 		action1();
 	} while (myLast !== delimiter);
 	if (myLast !== delimiter) {
-		throw 'unterminated ' + (delimiter == '\'' ? 'single quoted string' : delimiter == '"' ? 'double quoted string' : 'regular expression') + ' literal, stopped';
+
+		var start = 'unterminated ';
+		var descriptive = '';
+		switch (delimiter) {
+			case '\'':
+				descriptive = 'single quoted string';
+				break;
+			case '"':
+				descriptive = 'double quoted string';
+				break;
+			default:
+				descriptive = 'regular expression';
+		}
+		var end = 'literal, stopped processing';
+
+		throw start + ' ' + descriptive + ' ' + end;
+
+		//'unterminated ' + (delimiter == '\'' ? 'single quoted string' : delimiter == '"' ? 'double quoted string' : 'regular expression') + ' literal, stopped';
 	}
 }
 

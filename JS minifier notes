@@ -87,7 +87,20 @@ That's the first of my steps taken care of then (with a bit of code development)
 Armed with a little knowledge then let's have a read through of the perl module, using the (very) basic pseudo code below we can describe the flow of the perl minify module; 
 
 
->>> pseudo code goes here
+Accept the input (file or string, in my case this will be a file uploaded and converted to a string
+Buffer the first four characters of the javascript in four variables, a, b, c and d
+Initialise some other useful variables for last char processed, last whitespace found and conditional comment flag
+Start the main loop, 
+	Check character a 
+		If forward slash; check b and/or c to determine how to process various types of comment blocks correctly
+		Else if string literal; write out the literal and preserve necesary white space
+		Else if + or - character; process carefully so as to not break logic of javascript
+		Else if alphanumeric; write out and remove any unnecessary white space
+		Else if a closing square bracket/parenthess/brace; write and preserve endspace
+		Else if stripDebug flag set and debug comment found ';;;'; remove debug comments
+		Else; print chaacter and skip any whitespace
+End of loop
+Return output
 
 
 So now we have a basic understanding of the flow how do we start translating this code? I decided to start with the various helper functions that the perl module contains, the main routine uses several helper functions to help either identify the expression that the current part of the input represents or to help chop up the input and remove stuff we don't need like comments and whitespace etc.
@@ -101,12 +114,11 @@ isWhitespace
 isInfix
 isPrefix
 isPostfix
-getChar
-putChar
 defined
-minify
 
-Starting at the top and working my way down gave me exposure to perl syntax, armed with my trusty Google-Fu skills I started piecing together these helper functions, but once I understand what these should do how can I ensure what I am writing is fit for purpose? 
+During the development I'll also need to test helpers for getChar and putChar, and finally I'll need to run the actual minify function and check it's output, but we can probably get away with using the node app itself to test these functions by trying to minify an uploaded file.
+
+So starting at the top and working my way down gave me exposure to perl syntax, armed with my trusty Google-Fu skills I started piecing together these helper functions, but once I understand what these should do how can I ensure what I am writing is fit for purpose? 
 
 
 
@@ -134,7 +146,7 @@ Compare my results with those of the perl module
 
 There's one easy way to check the veracity of the output from my translated minifier, which is obvious really, run the same javascript through the perl minifier and comapre the two outputs, so let's do that then!
 
-To do that we'll need to set up a perl envirnoment, luckily I have one at hand as described by this post [insert link] So after finding the package on CPAN (https://metacpan.org/pod/JavaScript::Minifier) I was able to install this on my perl VM (http://www.perlmonks.org/?node_id=128077) and run my jquery javascript file through it so I can compare it to my JS minified version.
+To do that we'll need to set up a perl envirnoment, luckily I have one at hand as described by this post http://www.jdheywood.com/blog/2015/7/27/perl-diving So after finding the package on CPAN (https://metacpan.org/pod/JavaScript::Minifier) I was able to install this on my perl VM (http://www.perlmonks.org/?node_id=128077) and run my jquery javascript file through it so I can compare it to my JS minified version.
 
 Initially there was a significant difference, which after a little debugging was due to an error I had made in transposing the boolean logic around /* comments. 
 
@@ -162,7 +174,7 @@ Given I want to look at using some of the new ES6 javascript syntax I figured my
 
 Once happy start re-writing with ES6 features
 
-So what features does ES6 provide that we might want to use, a quick bit of Google-Fu provides us a few likely candidates so I decided to pick three and implement these, below are my thoughts on this;
+So what features does ES6 provide that we might want to use, a quick bit of Google-Fu provides us a few likely candidates so I decided to pick three and implement these, below are my thoughts on these features;
 
 
 Modules
@@ -179,40 +191,69 @@ What you need to do to require custom modules (that you've written and have loca
 
 import { minify } from "./minifier";
 
-That ./ indicate the current path and therefore node knows to look there and not try and resolve via npm installed packages.
+That ./ indicates the current path and therefore node knows to look there and not try and resolve via npm installed packages, obvious I know but it stumped me for a while!
 
 
 Iterators
 
 The iterable and iterator syntax of ES6 is much cleaner than vanilla javascript, one example of this is the 'for of' loop construct, taking one of my test cases as an example we can see that in good old javascript we have the following; 
 
-var whitespace_cases = [' ', '\t', '\n', '\r', '\f', 'a', '1'];
-var whitespace_results = [];
-
 for (var i = 0; i < whitespace_cases.length; i++) {
 	whitespace_results.push(isWhitespace(whitespace_cases[i]));
 };
 
-So we set up an array of test cases, and an empty array of results, then we loop over the cases and push each result to the results array. The for loop is clasic JS syntax, with the need to reference the iterator value to pull out the entry at that position. Using the for of loop construct we get the following;
+This Loops over an array of test cases and pushes each result to the results array, pretty simple. The for loop is clasic JS syntax, with the need to reference the iterator value to pull out the entry at that position. Using the for of loop construct we get the following;
 
 for (let x of whitespace_cases) {
 	whitespace_results.push(isWhitespace(x));
 };
 
-As you can see this is much cleaner, just let me loop over each entry in my array, I don't care about its position in this use case I just want to do something to each variable and crack on. I really like this, as with modules it is long overdue in my opinion.
+As you can see this is much cleaner, just let me loop over each entry in my array, I don't care about its position in this scenario I just want to do something to each variable and crack on. I really like this, as with modules it is long overdue in my opinion. This is also just the surface of iterators and iterables in ES6, there's much more to learn about these which can only benefit our code in future.
+
+
+Template Strings
+
+If we look at the putLiteral helper function in our minifier.js we can see that we do some string concatenation to throw an error if we find an unterminated literal, the block of code dealing with throwing the exception in my original implementation of this method looked something like this (copied directly from the way it is done in the perl module); 
+
+if (myLast !== delimiter) {
+	throw 'unterminated ' + (delimiter == '\'' ? 'single quoted string' : delimiter == '"' ? 'double quoted string' : 'regular expression') + ' literal, stopped';
+}
+
+If we choose to rewrite this using the shiny new template string syntax we get something like the following;
+
+if (myLast !== delimiter) {
+
+	var start = 'unterminated '
+	var descriptive = '';
+	switch(delimiter) {
+	    case '\'':
+	        descriptive = 'single quoted string';
+	        break;
+	    case '"':
+	        descriptive = 'double quoted string';
+	        break;
+	    default:
+	    	descriptive = 'regular expression';
+	}
+	var end = 'literal, stopped processing';
+
+	throw `${start} ${descriptive} ${end}`;
+}
+
+As you can see the actual throw statement is much cleaner, mainly as we've moved the logic out to a switch, rather than using an immediate if, but the use of back ticks and ${var} placeholders is quite nice.
+
+When transpiled to ES5 this throw ends up as the classic; 
+
+throw start + ' ' + descriptive + ' ' + end;
+
+In this trivial case I'm not sure it's worth the extra lines of code, but it demonstrates string templating, I can see this helping to clean up lots of messaging code, dealing with + ' ' + to build up a string is a bit of a pain so I can see how this feature will be useful.
 
 
 
 
+Running our ES6 Javascript
 
-
-
-
-
-
-
-
-So how do we do this, well we we can easily write some of our code in this way however if we want to run it through node we'll need to transpile it down to ES5 syntax for it to execute.
+So how do we run our nice ES6 Javascript? Given that support is not yet universal if we want to run it through node we'll need to transpile it down to ES5 syntax for it to execute.
 
 This sounds like a job for some automation, let's introduce a task runner. The one I've used in the past is grunt http://gruntjs.com/, surely there's a grunt tool for transpiling ES6, let's have a look, yep of course there is, I'm rolling with babel https://babeljs.io/ you can see the package.json and Gruntfile.js I set up to run the compilation/transpilation.
 
@@ -224,8 +265,7 @@ So the dev process now is;
 
 This seems a little odd, write code in one format but execute in another, but its no different to using coffeescript or typescript, in fact its similar to writing code in a compiled language like C#, although admittedly the output of our compilation here is still code that needs interpreting rather than a binary exectable or package.
 
-So anyway once you have transpiled navigate to the compiled version and fire it up, all being well it should behave itself and work as it did before, et voila we have a JS minifier written using some ES6 javascript, very nice indeed.
-
+So anyway once you have transpiled navigate to the compiled version and fire it up as before, all being well it should behave itself and work as it did before, et voila we have a JS minifier written using some ES6 javascript, very nice indeed.
 
 
 
@@ -239,7 +279,7 @@ What I Like
 The fact that my JS minifier actually minifies javascript, using javascript!
 The use of node as a development framework
 That I've learnt a bit about perl, setting up a VM, installing modules, syntax, the $_ default variable (or topic)
-Grunt and babel
+Grunt, babel and ES6
 
 What I Don't like
 
@@ -254,12 +294,10 @@ Implement proper testing using Jasmine http://jasmine.github.io/2.0/introduction
 Debug the perl to see the control flow rather than just picturing this in my head
 Add some defensive coding, catch thrown exceptions for example
 Add some basic styling to the node app pages
-Introduce more ES6 features
+Introduce more ES6 features, specifically refactor the minifier as a class
 
 
 I've learnt quite a few things during this exercise, and it's been a fun little challenge which I've mostly achieved, as with all first passes there is plenty of room for improvement but that just gives me a reason to revisit this project and learn some more.
 
 
 Ok that's all for now folks, until next time, stay classy
-
-
