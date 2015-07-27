@@ -12,45 +12,45 @@ var myLastReadChar = '';
 var myOutput = '';
 var myPosition = 0;
 
-function readFile(filename) {
+export function readFile(filename) {
 	var file = fs.readFileSync(filename, "utf8");
 	return file;
 }
 
-function isAlphanumeric(input) {
+export function isAlphanumeric(input) {
 	var expr = /^([0-9]|[a-z])+([0-9a-z]+)$/i
 	return expr.test(input);
 }
 
-function isEndspace(input) {
+export function isEndspace(input) {
 	return (input == '\n' || input == '\r' || input == '\f')
 }
 
-function isWhitespace(input) {
+export function isWhitespace(input) {
 	var expr = /\s/
 	return expr.test(input);
 }
 
 /* New line characters before or after these characters can be removed.
    Not + - / in this list because they require special care. */
-function isInfix(input) {
+export function isInfix(input) {
 	var expr = /[,;:=&%*<>\?\|\n]/;
 	return expr.test(input);
 }
 
 // New line characters after these characters can be removed.
-function isPrefix(input) {
+export function isPrefix(input) {
 	var expr = /[\{\(\[!]/; 
 	return (expr.test(input) || isInfix(input));
 }
 
 // New line characters before these characters can removed.
-function isPostfix(input) {
+export function isPostfix(input) {
 	var expr = /[\}\)\]]/; 
 	return (expr.test(input) || isInfix(input));
 }
 
-function getChar() {
+export function getChar() {
 	if (myPosition < myInput.length) {
 		myLastReadChar = myInput.charAt(myPosition++);
 		return myLastReadChar;
@@ -60,8 +60,12 @@ function getChar() {
 	}
 }
 
-function putChar(char) {
+export function putChar(char) {
 	myOutput = myOutput.concat(char);
+}
+
+export function defined(thing) {
+	return (typeof thing !== 'undefined');
 }
 
 // print a
@@ -105,10 +109,6 @@ function action4() {
   myCharB = myCharC;
   myCharC = myCharD;
   myCharD = getChar();
-}
-
-function defined(thing) {
-	return (typeof thing !== 'undefined');
 }
 
 // put string and regexp literals
@@ -168,7 +168,7 @@ function onWhitespaceConditionalComment() {
 
 // ------------------------------------------------------------------------------------------
 
-function minify(filename, stripDebug) {
+export function minify(filename, stripDebug) {
 	// read the file
 	myInput = readFile(filename);
 
@@ -307,8 +307,10 @@ function minify(filename, stripDebug) {
 
 function output() {
 	return myOutput;
+	
 }
 
+/*
 exports.readFile = readFile;
 exports.isAlphanumeric = isAlphanumeric;
 exports.isEndspace = isEndspace;
@@ -321,3 +323,5 @@ exports.putChar = putChar;
 exports.defined = defined;
 exports.minify = minify;
 exports.output = output;
+
+*/

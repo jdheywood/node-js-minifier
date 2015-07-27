@@ -162,9 +162,34 @@ Given I want to look at using some of the new ES6 javascript syntax I figured my
 
 Once happy start re-writing with ES6 features
 
-So what features does ES6 provide that we might want to use, a quick bit of Google-Fu provides us a few likely candidates;
+So what features does ES6 provide that we might want to use, a quick bit of Google-Fu provides us a few likely candidates so I decided to pick three and implement these, below are my thoughts on this;
 
-ES6 features
+
+Modules
+
+There are a ton of tutorials on the net covering modules so I won't waste space discussing these here, I'll quickly mention two things here though about these, firstly its great that there is now a more modular way to write and manage javascript, this has been long overdue in my opinion and solves a lot of horrible namespacing and scoping issues we've had to deal with in the past, for example when writing your own namespacing off the window or global scope. 
+
+Secondly when requiring files in node (which is what your import and export module syntax is actually transpiled down to when you get this working) I found a gotcha, if you write;
+
+import { minify } from "minifier";
+
+Once transpiled you are asking node to require the 'minifier' module installed via npm
+
+What you need to do to require custom modules (that you've written and have locally in your application code) is the following;
+
+import { minify } from "./minifier";
+
+That ./ indicate the current path and therefore node knows to look there and not try and resolve via npm installed packages.
+
+
+Template Strings
+
+
+
+
+
+
+
 
 
 
