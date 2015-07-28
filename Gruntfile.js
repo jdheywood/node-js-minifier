@@ -16,7 +16,8 @@ module.exports = function(grunt) {
           "compiled/minifier.js": "minifier.js",
           "compiled/requestHandlers.js": "requestHandlers.js",
           "compiled/router.js": "router.js",
-          "compiled/server.js": "server.js"
+          "compiled/server.js": "server.js",
+          "compiled/utilities.js": "utilities.js"
         }
       }
     }

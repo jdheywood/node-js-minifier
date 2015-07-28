@@ -36,21 +36,30 @@ export function upload(response, request) {
 				fs.unlink("/Dev/node-js-minifier/tmp/out.js");
 				fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js");
 			}
-		});
-	
-		/* So here is where we need to minify our incoming javascript */
-		var result = minify('/Dev/node-js-minifier/tmp/out.js', true);
-		fs.writeFile('/Dev/node-js-minifier/tmp/out-min.js', result, function(err) {
-		    if(err) {
-		        return console.log(err);
-		    }
-		    console.log("The file was saved!");
-		}); 
 
-		/* and write it back as the response of the upload */
-		response.writeHead(200, {"content-type": "text/javascript"});
-		var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js');
-    	readStream.pipe(response);
+			/* So here is where we need to minify our incoming javascript */
+			var result = '';
+			try {
+				result = minify('/Dev/node-js-minifier/tmp/out.js', true);
+			}
+			catch(err) {
+				console.log('****************************');
+				console.log(err);
+			}
+			finally {
+				fs.writeFile('/Dev/node-js-minifier/tmp/out-min.js', result, function(err) {
+				    if(err) {
+				        return console.log(err);
+				    }
+				    console.log("The file was saved!");
+				});
+
+				/* and write it back as the response of the upload */
+				response.writeHead(200, {"content-type": "text/javascript"});
+				var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js');
+		    	readStream.pipe(response);
+		    }
+    	});
 	});
 }
 

@@ -1,4 +1,6 @@
 import * as fs from "fs";
+import { isKeyOrReservedWord } from "./utilities";
+
 
 var myInput = '';
 var myCharA = '';
@@ -17,12 +19,13 @@ export function readFile(filename) {
 }
 
 export function isAlphanumeric(input) {
-	var expr = /^([0-9]|[a-z])+([0-9a-z]+)$/i
+	//var expr = /^([0-9]|[a-z])+([0-9a-z]+)$/i
+	var expr = /^[a-zA-Z0-9]+$/;
 	return expr.test(input);
 }
 
 export function isEndspace(input) {
-	return (input == '\n' || input == '\r' || input == '\f')
+	return (input === '\n' || input === '\r' || input === '\f')
 }
 
 export function isWhitespace(input) {
@@ -66,6 +69,7 @@ export function putChar(char) {
 export function defined(thing) {
 	return (typeof thing !== 'undefined');
 }
+
 
 // print a
 // move b to a
@@ -116,7 +120,7 @@ function putLiteral() {
 	var delimiter = myCharA; // ', " or /
 	action1();
 	do {
-		while (defined(myCharA) && myCharA == '\\') {
+		while (defined(myCharA) && myCharA === '\\') {
 			action1();
 			action1();
 		}
@@ -139,8 +143,6 @@ function putLiteral() {
 		var end = 'literal, stopped processing';
 
 		throw `${start} ${descriptive} ${end}`;
-
-		//'unterminated ' + (delimiter == '\'' ? 'single quoted string' : delimiter == '"' ? 'double quoted string' : 'regular expression') + ' literal, stopped';
 	}
 }
 
@@ -175,11 +177,27 @@ function preserveEndspace() {
   skipWhitespace();
 }
 
+function replaceAll(find, replace, str) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
+
 function onWhitespaceConditionalComment() {
   return (defined(myCharA) && isWhitespace(myCharA) &&
-          defined(myCharB) && myCharB == '/' &&
-          defined(myCharC) && (myCharC == '/' || myCharC == '*') &&
-          defined(myCharD) && myCharD == '@');
+          defined(myCharB) && myCharB === '/' &&
+          defined(myCharC) && (myCharC === '/' || myCharC === '*') &&
+          defined(myCharD) && myCharD === '@');
+}
+
+function verbatim(retain) {
+	console.log('verbatim called: ' + retain);
+	// write out all from current position to retain
+	while (retain > -1) {
+		action1();
+		retain--;
+	}
+	if (isWhitespace(myCharA)) {
+		action1();
+	}
 }
 
 // ------------------------------------------------------------------------------------------
@@ -208,9 +226,9 @@ export function minify(filename, stripDebug) {
 		}
 
 		// Each branch handles trailing whitespace and ensures a is on non-whitespace or is undefined when branch finishes
-		if (myCharA == '/') { // a division, comment, or regexp literal
-	      	if (defined(myCharB) && myCharB == '/') { // slash-slash comment
-	        	ccFlag = defined(myCharC) && myCharC == '@'; // tests in IE7 show no space allowed between slashes and at symbol
+		if (myCharA === '/') { // a division, comment, or regexp literal
+	      	if (defined(myCharB) && myCharB === '/') { // slash-slash comment
+	        	ccFlag = defined(myCharC) && myCharC === '@'; // tests in IE7 show no space allowed between slashes and at symbol
 	        	while (defined(myCharA) && !isEndspace(myCharA)) {
 	        		ccFlag ? action2() : action3();
 	        	}
@@ -227,9 +245,9 @@ export function minify(filename, stripDebug) {
 	          		}
 	        	}
 	      	}
-			else if (defined(myCharB) && myCharB == '*') { // slash-star comment
-	    		ccFlag = (defined(myCharC) && myCharC == '@'); // test in IE7 shows no space allowed between star and at symbol
-	    		while (defined(myCharB) && !(myCharA == '*' && myCharB == '/')) {
+			else if (defined(myCharB) && myCharB === '*') { // slash-star comment
+	    		ccFlag = (defined(myCharC) && myCharC === '@'); // test in IE7 shows no space allowed between star and at symbol
+	    		while (defined(myCharB) && !(myCharA === '*' && myCharB === '/')) {
 	      			ccFlag ? action2() : action3();
 	    		}
 	    		if (defined(myCharB)) { // a is asterisk and b is foreslash
@@ -245,8 +263,8 @@ export function minify(filename, stripDebug) {
 	        			myCharA = ' ';  // the /
 	        			collapseWhitespace();
 	        			if (defined(myLast) && defined(myCharB) &&
-	            			((isAlphanumeric(myLast) && (isAlphanumeric(myCharB) || myCharB == '.')) ||
-	             			(myLast == '+' && myCharB == '+') || (myLast == '-' && myCharB == '-'))) { // for a situation like 5-/**/-2 or a/**/a
+	            			((isAlphanumeric(myLast) && (isAlphanumeric(myCharB) || myCharB === '.')) ||
+	             			(myLast === '+' && myCharB === '+') || (myLast === '-' && myCharB === '-'))) { // for a situation like 5-/**/-2 or a/**/a
 	          				// When entering this block a is whitespace.
 	          				// The comment represented whitespace that cannot be removed. Therefore replace the now gone comment with a whitespace.
 	          				action1();
@@ -263,8 +281,7 @@ export function minify(filename, stripDebug) {
 	      			throw 'unterminated comment, stopped';
 	    		}
 	  		}
-	  
-	  		else if ( defined(myLastNws) && (myLastNws == ')' || myLastNws == ']' || myLastNws == '.' || isAlphanumeric(myLastNws)) ) { // division
+	  		else if ( defined(myLastNws) && (myLastNws === ')' || myLastNws === ']' || myLastNws === '.' || isAlphanumeric(myLastNws)) ) { // division
 	    		action1();
 	    		collapseWhitespace();
 	    		// don't want a division to become a slash-slash comment with following conditional comment
@@ -277,11 +294,11 @@ export function minify(filename, stripDebug) {
 	    		onWhitespaceConditionalComment() ? action1() : preserveEndspace();
 	  		}
 		}
-		else if (myCharA == '\'' || myCharA == '"' ) { // string literal
+		else if (myCharA === '\'' || myCharA === '"' ) { // string literal
 	  		putLiteral();
 	  		preserveEndspace();
 		}
-		else if (myCharA == '+' || myCharA == '-') { // careful with + + and - -
+		else if (myCharA === '+' || myCharA === '-') { // careful with + + and - -
 	  		action1();
 	  		collapseWhitespace();
 	  		if (defined(myCharA) && isWhitespace(myCharA)) {
@@ -293,10 +310,10 @@ export function minify(filename, stripDebug) {
 	  		collapseWhitespace();
 	  		if (defined(myCharA) && isWhitespace(myCharA)) {
 	    		// if b is '.' could be (12 .toString()) which is property invocation. If space removed becomes decimal point and error.
-	    		(defined(myCharB) && (isAlphanumeric(myCharB) || myCharB == '.')) ? action1() : preserveEndspace();
+	    		(defined(myCharB) && (isAlphanumeric(myCharB) || myCharB === '.')) ? action1() : preserveEndspace();
 	  		}
 		}
-		else if (myCharA == ']' || myCharA == '}' || myCharA == ')') { // no need to be followed by space but maybe needs following new line
+		else if (myCharA === ']' || myCharA === '}' || myCharA === ')') { // no need to be followed by space but maybe needs following new line
 	  		action1();
 	  		preserveEndspace();
 		}
@@ -310,14 +327,15 @@ export function minify(filename, stripDebug) {
 		else { // anything else just prints and trailing whitespace discarded
 	  		action1();
 	  		skipWhitespace();
-		}
-		
+		}		
 	}
 
 	if (defined(myLastReadChar) && myLastReadChar == '\n') {
     	putChar('\n');
   	}
 
+	myOutput = replaceAll('typeof', 'typeof ', myOutput);
+	
   	return myOutput;
 } // fin
 
