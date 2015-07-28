@@ -42,8 +42,10 @@ function readFile(filename) {
 
 function isAlphanumeric(input) {
 	//var expr = /^([0-9]|[a-z])+([0-9a-z]+)$/i
-	var expr = /^[a-zA-Z0-9]+$/;
-	return expr.test(input);
+	//var expr = /^[a-zA-Z0-9]+$/;
+
+	var expr = /[\w\$\\]/;
+	return expr.test(input) || input.charCodeAt() > 126;
 }
 
 function isEndspace(input) {
@@ -347,8 +349,6 @@ function minify(filename, stripDebug) {
 	if (defined(myLastReadChar) && myLastReadChar == '\n') {
 		putChar('\n');
 	}
-
-	myOutput = replaceAll('typeof', 'typeof ', myOutput);
 
 	return myOutput;
 }

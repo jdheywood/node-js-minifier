@@ -1,6 +1,4 @@
 import * as fs from "fs";
-import { isKeyOrReservedWord } from "./utilities";
-
 
 var myInput = '';
 var myCharA = '';
@@ -18,10 +16,9 @@ export function readFile(filename) {
 	return file;
 }
 
-export function isAlphanumeric(input) {
-	//var expr = /^([0-9]|[a-z])+([0-9a-z]+)$/i
-	var expr = /^[a-zA-Z0-9]+$/;
-	return expr.test(input);
+export function isAlphanumeric(input) { // This is poorly named, it does a little more than check for alpha numeric values!
+	var expr = /[\w\$\\]/;
+	return expr.test(input) || input.charCodeAt() > 126;
 }
 
 export function isEndspace(input) {
@@ -188,18 +185,6 @@ function onWhitespaceConditionalComment() {
           defined(myCharD) && myCharD === '@');
 }
 
-function verbatim(retain) {
-	console.log('verbatim called: ' + retain);
-	// write out all from current position to retain
-	while (retain > -1) {
-		action1();
-		retain--;
-	}
-	if (isWhitespace(myCharA)) {
-		action1();
-	}
-}
-
 // ------------------------------------------------------------------------------------------
 
 export function minify(filename, stripDebug) {
@@ -334,8 +319,6 @@ export function minify(filename, stripDebug) {
     	putChar('\n');
   	}
 
-	myOutput = replaceAll('typeof', 'typeof ', myOutput);
-	
   	return myOutput;
 } // fin
 
