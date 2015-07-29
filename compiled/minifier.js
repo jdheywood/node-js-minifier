@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
 	value: true
 });
 exports.readFile = readFile;
@@ -16,13 +16,11 @@ exports.defined = defined;
 exports.minify = minify;
 exports.miniOutput = miniOutput;
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 var _fs = require("fs");
 
 var fs = _interopRequireWildcard(_fs);
-
-var _utilities = require("./utilities");
 
 var myInput = '';
 var myCharA = '';
@@ -41,9 +39,7 @@ function readFile(filename) {
 }
 
 function isAlphanumeric(input) {
-	//var expr = /^([0-9]|[a-z])+([0-9a-z]+)$/i
-	//var expr = /^[a-zA-Z0-9]+$/;
-
+	// This is poorly named, it does a little more than check for alpha numeric values!
 	var expr = /[\w\$\\]/;
 	return expr.test(input) || input.charCodeAt() > 126;
 }
@@ -167,7 +163,7 @@ function putLiteral() {
 		}
 		var end = 'literal, stopped processing';
 
-		throw start + " " + descriptive + " " + end;
+		throw start + ' ' + descriptive + ' ' + end;
 	}
 }
 
@@ -209,21 +205,14 @@ function onWhitespaceConditionalComment() {
 	return defined(myCharA) && isWhitespace(myCharA) && defined(myCharB) && myCharB === '/' && defined(myCharC) && (myCharC === '/' || myCharC === '*') && defined(myCharD) && myCharD === '@';
 }
 
-function verbatim(retain) {
-	console.log('verbatim called: ' + retain);
-	// write out all from current position to retain
-	while (retain > -1) {
-		action1();
-		retain--;
-	}
-	if (isWhitespace(myCharA)) {
-		action1();
-	}
-}
-
 // ------------------------------------------------------------------------------------------
 
 function minify(filename, stripDebug) {
+	// Reset in case we've already run
+	myLastReadChar = '';
+	myPosition = 0;
+	myOutput = '';
+
 	// read the file
 	myInput = readFile(filename);
 

@@ -16,6 +16,7 @@ handle["/start"] = handler.start;
 handle["/upload"] = handler.upload;
 handle["/show"] = handler.show;
 handle["/test"] = handler.test;
+handle["/minify"] = handler.process;
 
 (0, _server.start)(_router.route, handle);
 //# sourceMappingURL=index.js.map

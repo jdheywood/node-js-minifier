@@ -188,6 +188,11 @@ function onWhitespaceConditionalComment() {
 // ------------------------------------------------------------------------------------------
 
 export function minify(filename, stripDebug) {
+	// Reset in case we've already run
+	myLastReadChar = '';
+	myPosition = 0; 
+	myOutput = ''; 
+
 	// read the file
 	myInput = readFile(filename);
 

@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.start = start;
 exports.upload = upload;
+exports.process = process;
 exports.show = show;
 exports.test = test;
 
@@ -37,35 +38,60 @@ function upload(response, request) {
 	form.parse(request, function (error, fields, files) {
 		console.log("parsing done");
 
-		/* Possible error on Windows systems: tried to rename to an already existing file */
-		fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js", function (error) {
-			if (error) {
-				fs.unlink("/Dev/node-js-minifier/tmp/out.js");
-				fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js");
+		// delete previously saved file for sanity
+		fs.lstat("/Dev/node-js-minifier/tmp/out.js", function (err, stats) {
+			if (!err && stats.isFile()) {
+				console.log('unlinking out.js');
+				fs.unlinkSync("/Dev/node-js-minifier/tmp/out.js");
 			}
 
-			/* So here is where we need to minify our incoming javascript */
-			var result = '';
-			try {
-				result = (0, _minifier.minify)('/Dev/node-js-minifier/tmp/out.js', true);
-			} catch (err) {
-				console.log('****************************');
-				console.log(err);
-			} finally {
-				fs.writeFile('/Dev/node-js-minifier/tmp/out-min.js', result, function (err) {
-					if (err) {
-						return console.log(err);
-					}
-					console.log("The file was saved!");
-				});
+			fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js", function (error) {
+				if (error) {
+					fs.unlink("/Dev/node-js-minifier/tmp/out.js");
+					fs.rename(files.upload.path, "/Dev/node-js-minifier/tmp/out.js");
+					console.log('error renaming incoming file!');
+				}
+			});
 
-				/* and write it back as the response of the upload */
-				response.writeHead(200, { "content-type": "text/javascript" });
-				var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js');
-				readStream.pipe(response);
-			}
+			response.writeHead(200, { "Content-Type": "text/html" });
+			response.write("Received file:<br/>");
+			response.write("<a href='/minify'>Minify this now by clicking here</a>");
+			response.end();
 		});
 	});
+}
+
+function process(response) {
+	var result = '';
+	try {
+		result = (0, _minifier.minify)("/Dev/node-js-minifier/tmp/out.js", true);
+	} catch (err) {
+		console.log(err);
+	} finally {
+
+		fs.open("/Dev/node-js-minifier/tmp/out-min.js", 'w+', function (err, fd) {
+			if (err) {
+				console.log('error opening min file');
+			}
+
+			fs.ftruncate(fd, 0, function (err) {
+				if (err) {
+					console.log('error truncating min file');
+				}
+
+				fs.writeFile('/Dev/node-js-minifier/tmp/out-min.js', result, function (err) {
+					if (err) {
+						console.log('error writing min file');
+					}
+
+					/* and write it back as the response of the upload */
+					response.writeHead(200, { "content-type": "text/javascript" });
+					var readStream = fs.createReadStream('/Dev/node-js-minifier/tmp/out-min.js');
+					readStream.pipe(response);
+				});
+			});
+		});
+	}
 }
 
 function show(response) {
