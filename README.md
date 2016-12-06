@@ -18,7 +18,7 @@ This is an attempt to translate [this Perl JS minifier](https://github.com/zoffi
 
 ### Contribution guidelines ###
 
-* No contribtions please, this is just an exercise 
+* No contributions please, this is just an exercise 
 
 ### Who do I talk to? ###
 
