@@ -22,3 +22,4 @@ This is an attempt to translate [this Perl JS minifier](https://github.com/zoffi
 ### Who do I talk to? ###
 
 * Repo owner: jdheywood@gmail.com
+
